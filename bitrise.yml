@@ -1,10 +1,11 @@
-format_version: "11"
+---
+format_version: '11'
 default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 project_type: react-native
 trigger_map:
-- push_branch: '*'
+- push_branch: "*"
   workflow: primary
-- pull_request_source_branch: '*'
+- pull_request_source_branch: "*"
   workflow: primary
 workflows:
   primary:
@@ -16,17 +17,29 @@ workflows:
     - npm@1:
         inputs:
         - command: install
-        - args: --legacy-peer-deps
+        - args: "--legacy-peer-deps"
     - script:
         title: Create local.properties with Android SDK path
         inputs:
-          - content: |
-              #!/bin/bash
-              echo "sdk.dir=$ANDROID_HOME" > android/local.properties
-    - install-missing-android-tools@3:
+        - content: |
+            #!/bin/bash
+            echo "sdk.dir=$ANDROID_HOME" > android/local.properties
+    # Add global Gradle configuration before Android tools installation
+    - script:
+        title: Configure Global Gradle Properties
         inputs:
-        - gradlew_path: android/gradlew
-    - script@1:
+        - content: |
+            #!/bin/bash
+            # Create global gradle.properties to disable toolchains
+            mkdir -p $HOME/.gradle
+            cat > $HOME/.gradle/gradle.properties << EOF
+            org.gradle.java.installations.auto-detect=false
+            org.gradle.toolchains.auto-detect=false
+            org.gradle.toolchains.foojay-resolver-convention.enabled=false
+            EOF
+            echo "Created global Gradle properties:"
+            cat $HOME/.gradle/gradle.properties
+    - script:
         title: Configure Java and Android properties
         inputs:
         - content: |
@@ -39,14 +52,19 @@ workflows:
             android.enableJetifier=true
             org.gradle.daemon=false
             org.gradle.java.installations.auto-detect=false
+            org.gradle.toolchains.auto-detect=false
             org.gradle.toolchains.foojay-resolver-convention.enabled=false
             react.internal.disableJavaVersionAlignment=true
             EOF
             echo "Environment configured"
+    # Android tools installation now happens after toolchain configuration
+    - install-missing-android-tools@3:
+        inputs:
+        - gradlew_path: android/gradlew
     - android-build@1:
         title: Build Android APK
         inputs:
-        - project_location: /android
+        - project_location: "/android"
         - module: app
         - variant: release
         - build_type: apk
@@ -58,4 +76,4 @@ app:
   envs:
   - opts:
       is_expand: false
-    GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.java.installations.auto-detect=false -Dorg.gradle.toolchains.foojay-resolver-convention.enabled=false
+    GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.java.installations.auto-detect=false -Dorg.gradle.toolchains.foojay-resolver-convention.enabled=false"
