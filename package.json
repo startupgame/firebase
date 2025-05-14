@@ -17,7 +17,7 @@
     "expo": "~52.0.46",
     "expo-asset": "~11.0.5",
     "expo-auth-session": "~6.0.3",
-    "expo-constants": "^17.1.6",
+    "expo-constants": "~17.0.8",
     "expo-dev-client": "~5.0.20",
     "expo-font": "~13.0.4",
     "expo-linear-gradient": "^14.0.2",
