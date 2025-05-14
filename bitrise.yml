@@ -20,12 +20,12 @@ workflows:
         - args: --legacy-peer-deps
     - file-downloader@1:
         inputs:
-        - destination: "/android/local.properties"
+        - destination: "android/local.properties"
         - source: |
             sdk.dir=/Users/pal/Library/Android/sdk
     - install-missing-android-tools@3:
         inputs:
-        - gradlew_path: "/android/gradlew"
+        - gradlew_path: "android/gradlew"
     - script@1:
         title: Configure Java and Android properties
         inputs:
@@ -33,7 +33,7 @@ workflows:
             #!/bin/bash
             echo "Setting up Android build environment..."
             # Update gradle.properties to avoid toolchain issues
-            cat > /android/gradle.properties <<EOF
+            cat > android/gradle.properties <<EOF
             org.gradle.jvmargs=-Xmx2048m -XX:MaxMetaspaceSize=512m
             android.useAndroidX=true
             android.enableJetifier=true
@@ -52,7 +52,7 @@ workflows:
         - build_type: apk
     - deploy-to-bitrise-io@2:
         inputs:
-        - deploy_path: "/android/app/build/outputs/apk/release/app-release.apk"
+        - deploy_path: "android/app/build/outputs/apk/release/app-release.apk"
     - cache-push@2: {}
 app:
   envs:
