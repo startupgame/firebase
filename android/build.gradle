@@ -1,0 +1,41 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    // Disable Java toolchain features to avoid conflicts
+    System.setProperty('org.gradle.java.installations.auto-detect', 'false')
+    System.setProperty('org.gradle.toolchains.foojay-resolver-convention.enabled', 'false')
+    
+    ext {
+        disableJavaVersionCheck = true
+        buildToolsVersion = "35.0.0"
+        minSdkVersion = 24
+        compileSdkVersion = 34
+        targetSdkVersion = 34
+        kotlinVersion = "1.9.22"
+        ndkVersion = "26.1.10909125"
+        disableJavaVersionCheck = true
+    }
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("com.android.tools.build:gradle:7.4.2")
+        classpath("com.facebook.react:react-native-gradle-plugin:0.76.7")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+    }
+}
+
+apply plugin: "com.facebook.react.rootproject"
+
+allprojects {
+    repositories {
+        maven {
+            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+            url(new File(['node', '--print', "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim(), '../android'))
+        }
+        mavenCentral()
+        google()
+        maven { url 'https://www.jitpack.io' }
+    }
+}

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "340659620125",
+    "project_id": "startup-pitch-challenge",
+    "storage_bucket": "startup-pitch-challenge.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:340659620125:android:1a09f58e644f4aab6ff9f4",
+        "android_client_info": {
+          "package_name": "com.startuppitchchallenge"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBw1_r-9pBIYITSjCQVKkqpTgKkZXnwTPA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
